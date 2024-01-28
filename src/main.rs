@@ -15,10 +15,6 @@ fn main() {
     q_table.init_table(environment.get_maze(), &environment);
     q_table.train(environment.clone(), 100, true);
     q_table.print_result(environment.clone());
-    println!("{:#?}", environment);
-    let _ = write("test.txt", b"hello");
-    let t = fs::read_to_string("test.txt").unwrap();
-    println!("{}", t)
 }
 pub const DISCOUNT_FACTOR: f32 = 0.9;
 pub const LEARNING_RATE: f32 = 0.1;
