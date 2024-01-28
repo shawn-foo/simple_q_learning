@@ -4,8 +4,6 @@ use strum_macros::EnumIter;
 use strum::IntoEnumIterator;
 use serde::{Serialize, Deserialize};
 use std::fs;
-use std::fs::File;
-use std::io::Write;
 
 
 fn main() {
@@ -18,6 +16,8 @@ fn main() {
     q_table.train(environment.clone(), 100, true);
     q_table.print_result(environment.clone());
     println!("{:#?}", environment);
+    let t = fs::read_to_string("./test.txt").unwrap();
+    println!("{}", t)
 }
 pub const DISCOUNT_FACTOR: f32 = 0.9;
 pub const LEARNING_RATE: f32 = 0.1;
