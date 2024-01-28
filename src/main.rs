@@ -4,7 +4,7 @@ use strum_macros::EnumIter;
 use strum::IntoEnumIterator;
 use serde::{Serialize, Deserialize};
 use std::fs;
-use std::fs::write;
+use std::{thread, time};
 
 fn main() {
     let f = fs::read_to_string("./maze.ron").unwrap();
@@ -15,6 +15,8 @@ fn main() {
     q_table.init_table(environment.get_maze(), &environment);
     q_table.train(environment.clone(), 100, true);
     q_table.print_result(environment.clone());
+    let one_minute = time::Duration::from_secs(120);
+    thread::sleep(one_minute);
 }
 pub const DISCOUNT_FACTOR: f32 = 0.9;
 pub const LEARNING_RATE: f32 = 0.1;
