@@ -83,16 +83,16 @@ impl Position{
 }
 #[derive(PartialEq, Eq, Hash, Clone, Debug)] 
 struct State{
-    pub player_pos: Position
+    pub agent_pos: Position
 }
 impl State{
     fn new(position: Position) -> Self{
-        Self { player_pos: position }
+        Self { agent_pos: position }
     }
     fn check_if_inside(&self, maze: Vec<Vec<i32>>) -> bool {
         let max_y = maze.len() - 1;
         let max_x = maze[0].len() - 1;
-        if self.player_pos.x <= max_x as i32 && self.player_pos.y <= max_y as i32 && self.player_pos.x >= 0 && self.player_pos.y >= 0 {
+        if self.agent_pos.x <= max_x as i32 && self.agent_pos.y <= max_y as i32 && self.agent_pos.x >= 0 && self.agent_pos.y >= 0 {
             return true;
         }
         return false;
@@ -181,9 +181,9 @@ impl Qtable{
                     println!("→")
                 }
             }
-            let maze_value = environment.maze[state.player_pos.y as usize][state.player_pos.x as usize];
+            let maze_value = environment.maze[state.agent_pos.y as usize][state.agent_pos.x as usize];
             state = action_and_state_to_new_state(action, state.clone());
-            if maze_value == 2 || state.player_pos == environment.endpoint{
+            if maze_value == 2 || state.agent_pos == environment.endpoint{
                 reached_goal = true;
             }
             
@@ -198,7 +198,7 @@ impl Qtable{
 fn cal_reward(environment: Environment, state: State) -> f32{
     let mut reward:f32 = 0.0;
     let endpoint = environment.endpoint;
-    let current_pos = environment.maze[state.player_pos.y as usize][state.player_pos.x as usize];
+    let current_pos = environment.maze[state.agent_pos.y as usize][state.agent_pos.x as usize];
     if current_pos == 2{
         reward += 10000000000.0
     }
@@ -208,16 +208,16 @@ fn cal_reward(environment: Environment, state: State) -> f32{
     else if current_pos == 0{
 
         //implememtn out of bounds stuff
-        if state.player_pos.x > environment.maze[0].len() as i32 -1{
+        if state.agent_pos.x > environment.maze[0].len() as i32 -1{
             reward -= 10000.0;
         }
-        else if state.player_pos.x > environment.maze.len() as i32 -1 {
+        else if state.agent_pos.x > environment.maze.len() as i32 -1 {
             reward -= 10000.0;
         } 
         else {
             reward += 1000000.0;
             //find the difference
-            let distance = (((state.player_pos.x - environment.endpoint.x).pow(2) + (state.player_pos.y - environment.endpoint.y).pow(2)) as f32).sqrt();
+            let distance = (((state.agent_pos.x - environment.endpoint.x).pow(2) + (state.agent_pos.y - environment.endpoint.y).pow(2)) as f32).sqrt();
             reward += distance * 10.0 * -1.0
         }
     }
@@ -233,16 +233,16 @@ fn action_and_state_to_new_state(action: Actions, old_state: State) -> State{
     let mut state = old_state;
     match action{
         Actions::DOWN => {
-            state.player_pos.y += 1;
+            state.agent_pos.y += 1;
         },
         Actions::UP => {
-            state.player_pos.y -= 1;
+            state.agent_pos.y -= 1;
         }
         Actions::LEFT => {
-            state.player_pos.x -= 1;
+            state.agent_pos.x -= 1;
         }
         Actions::RIGHT => {
-            state.player_pos.x += 1;
+            state.agent_pos.x += 1;
         }
     }
 
